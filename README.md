@@ -8,11 +8,11 @@ The algorithm of this inspection is straight forward.  Take a look at the comman
 
 **`-h host`** specifies host name of the target database,
 
-**`-p port** specifies port number to conect to the target database,
+**`-p port`** specifies port number to conect to the target database,
 
-**`-U` username** or **`-u username`** specifies database user name to connet to the database.   This user must have privlledge to readd all `pg_class` tuples for all the database except for `template0`.
+**`-U username`** or **`-u username`** specifies database user name to connet to the database.   This user must have privlledge to readd all `pg_class` tuples for all the database except for `template0`.
 
-**`-d` database** Specifies database name to login to get list of databases.   Please note that to obtain information of each database, this toll will use such dagtabase name to login.   Database user as specified by `-U` or `-u` option must have proper priviledes to read `pg_class` catalog of each database.
+**`-d database`** Specifies database name to login to get list of databases.   Please note that to obtain information of each database, this toll will use such dagtabase name to login.   Database user as specified by `-U` or `-u` option must have proper priviledes to read `pg_class` catalog of each database.
 
 If any of these options are omitted, default value will be used.   If a password is associated with the user, you will be prompted for the password each time this tool connects to the database.   You can bypass this by configuring `.pgpass` file as described in `psql` documentation of PosgtgreSQL.
 
