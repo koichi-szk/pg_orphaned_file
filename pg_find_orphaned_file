@@ -9,8 +9,35 @@
 # The user must have privellege to all the databases, hopefully superusser.
 
 
-conninfo="$*"
-dbdirinfo=data_directory.out
+host=""
+port=""
+user=""
+database=""
+
+while getopts h:p:u:U:d: OPT
+do
+	case $OPT in
+		h)
+			host="-h "$OPTARG
+			;;
+		p)
+			port="-p "$OPTARG
+			;;
+		d)
+			database="-d "$OPTARG
+			;;
+		u)
+			user="-U "$OPTARG
+			;;
+		U)
+			user="-U "$OPTARG
+			;;
+		\?)
+			echo "Invalid option."
+			exit 1
+	esac
+done
+
 dblist=dblist.out
 pathlist=pathlist.out
 filelist=filelist.out
@@ -28,23 +55,17 @@ touch $pathlist
 
 allsafe="yes"
 
-# Get database directory
-
-psql -q -t -o $dbdirinfo "$connstr" -c "SHOW data_directory" > /dev/null
-
-read dbpath < $dbdirinfo
-rm -f $dbdirinfo
 
 # Get database list other than template0
 
-psql -q -t -o $dblist "$connstr" -c "select datname from pg_database where datname <> 'template0'" > /dev/null
+psql -q -t -o $dblist $host $port $database $user -c "select datname from pg_database where datname <> 'template0'" > /dev/null
 
 # Get filepath for all the relations.
 # Note to track symlink for tablespaces
 
 for db in `cat $dblist`
 do
-	psql -q -t -o $wkout "$connstr" -d $db -c 'select pg_relation_filepath(oid) from pg_class where pg_relation_filepath(oid) is not null' > /dev/null
+	psql -q -t -o $wkout $host $port $user -d $db -c 'select pg_relation_filepath(oid) from pg_class where pg_relation_filepath(oid) is not null' > /dev/null
 	cat $wkout >> $pathlist
 done
 sort $pathlist | sed '/^[	]*$/d' | uniq > $pathlist.wk
@@ -55,13 +76,13 @@ rm $wkout
 # Get all the file list for all the databases
 # Note to track symlink for tablespaces
 
-psql -q -t -o $wkout "$connstr" -c "select pg_ls_dir('global')" > /dev/null
+psql -q -t -o $wkout $host $port $database $uer -c "select pg_ls_dir('global')" > /dev/null
 sed '/^[   ]*$/d' $wkout | sed 's/^ */global\//' > $filelist
 
-psql -q -t -o $dblist "$connstr" -c "select oid from pg_database where datname <> 'template0'" > /dev/null
+psql -q -t -o $dblist $host $port $database $uer -c "select oid from pg_database where datname <> 'template0'" > /dev/null
 for db in `cat $dblist`
 do
-	psql -q -t -o $wkout "$connsts" -c "select pg_ls_dir('base/$db')" > /dev/null
+	psql -q -t -o $wkout $host $port $database $uer -c "select pg_ls_dir('base/$db')" > /dev/null
 	sed '/^[   ]*$/d' $wkout | sed "s/^ */base\/$db\//" >> $filelist
 done
 
