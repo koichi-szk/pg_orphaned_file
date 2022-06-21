@@ -32,4 +32,6 @@ This toold does not detect the file with valid name such as:
 * `[1-9][0-9]*_fsm` where the former part `[1-9][0-9]*` is valid relfilenode but the relation does not have free space map,
 * `[1-9][0-9]*_vm` where the former part `[1-9][0-9]*` is valid relfilenode but the relation does not have visibiility map,
 
-
+Matching is done using each pair of the file list and relfilenode output list, therefore the algorithm is $O(N^2)$.
+If databaes has many objects (huge tables and huge idnexes) it may take very long to find suspicious orphaned file.
+To improve, we need hash or other index.
