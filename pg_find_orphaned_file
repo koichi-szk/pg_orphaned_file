@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Copyright(c) 2022, Koichi Suzuki
+# Copyright(c) 2022, EnterpriseDB
+
 # Scan all the file path and actual file to extract suspicious orphaned file
 # in the database file system.
 #
