@@ -24,3 +24,12 @@ Before removing these files, pleases make sure that you absolutely do not need t
 
 If no such suspicious orphaned file is not detected, the command will write this message.
 
+## More to improve
+
+This toold does not detect the file with valid name such as:
+
+* `[1-9][0-9]*.[1-9][0-9]*` where the former part `[1-9][0-9]*` is valid relfilenode but the file itself is not actually a part of relfile.
+* `[1-9][0-9]*_fsm` where the former part `[1-9][0-9]*` is valid relfilenode but the relation does not have free space map,
+* `[1-9][0-9]*_vm` where the former part `[1-9][0-9]*` is valid relfilenode but the relation does not have visibiility map,
+
+
